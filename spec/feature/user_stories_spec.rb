@@ -45,6 +45,16 @@ describe 'user stories' do
     new_balance = card.deduct(1)
     expect(old_balance > new_balance)
   end
+
+
+  # In order to get through the barriers.
+  # As a customer
+  # I need to touch in and out.
+  it 'so that a customer can begin and end a journey, the card should touch in and out of the journey' do
+    card = Oystercard.new
+    card.touch_in
+    expect(card.in_journey?).to eq true
+    card.touch_out
+    expect(card.in_journey?).to eq false
+  end
 end
-
-
