@@ -32,6 +32,7 @@ MIN_FARE = 1
   end
 
   def touch_out
+    deduct MIN_FARE
     @journey = false
   end
 end

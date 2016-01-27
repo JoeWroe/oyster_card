@@ -66,6 +66,18 @@ describe 'user stories' do
   it "so that there's enough to travel, you can only touch-in with min fare value" do
     card = Oystercard.new
     expect{card.touch_in}.to raise_error "Cannot touch-in: under minimum balance of #{Oystercard::MIN_FARE}; please top-up"
-    end
+  end
+
+
+  # In order to pay for my journey
+  # As a customer
+  # When my journey is complete, I need the correct amount deducted from my card
+  it 'so that a customer is charged, balance is deducted on touch out' do
+    card = Oystercard.new
+    card.top_up(Oystercard::MIN_FARE)
+    card.touch_in
+    card.touch_out
+    expect(card.balance).to eq 0
+  end
 
 end

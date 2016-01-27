@@ -50,11 +50,19 @@ describe Oystercard do
   end
 
   describe ' #touch out' do
-    it 'changes in_journey? to false' do
+
+    before do
       card.top_up(Oystercard::MIN_FARE)
       card.touch_in
+    end
+
+    it 'changes in_journey? to false' do
       card.touch_out
       expect(card).not_to be_in_journey
+    end
+
+    it 'deducts minimum fare from balance' do
+      expect{card.touch_out}.to change{card.balance}.by(-Oystercard::MIN_FARE)
     end
   end
 
