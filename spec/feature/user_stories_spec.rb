@@ -52,9 +52,20 @@ describe 'user stories' do
   # I need to touch in and out.
   it 'so that a customer can begin and end a journey, the card should touch in and out of the journey' do
     card = Oystercard.new
+    card.top_up(Oystercard::MIN_FARE)
     card.touch_in
     expect(card.in_journey?).to eq true
     card.touch_out
     expect(card.in_journey?).to eq false
   end
+
+  #In order to pay for my journey
+  #As a customer
+  #I need to have the minimum amount (£1) for a single journey.
+
+  it "so that there's enough to travel, you can only touch-in with min fare value" do
+    card = Oystercard.new
+    expect{card.touch_in}.to raise_error "Cannot touch-in: under minimum balance of #{Oystercard::MIN_FARE}; please top-up"
+    end
+
 end

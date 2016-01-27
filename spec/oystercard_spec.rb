@@ -37,7 +37,13 @@ describe Oystercard do
   end
 
   describe ' #touch in' do
+
+    it 'raises error when balance is under minimum fare cost' do
+      expect{card.touch_in}.to raise_error "Cannot touch-in: under minimum balance of #{Oystercard::MIN_FARE}; please top-up"
+    end
+
     it 'changes in_journey? to true' do
+      card.top_up(Oystercard::MIN_FARE)
       card.touch_in
       expect(card).to be_in_journey
     end
@@ -45,6 +51,7 @@ describe Oystercard do
 
   describe ' #touch out' do
     it 'changes in_journey? to false' do
+      card.top_up(Oystercard::MIN_FARE)
       card.touch_in
       card.touch_out
       expect(card).not_to be_in_journey
