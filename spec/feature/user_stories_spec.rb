@@ -53,7 +53,7 @@ describe 'user stories' do
   it 'so that a customer can begin and end a journey, the card should touch in and out of the journey' do
     card = Oystercard.new
     card.top_up(Oystercard::MIN_FARE)
-    card.touch_in
+    card.touch_in('station')
     expect(card.in_journey?).to eq true
     card.touch_out
     expect(card.in_journey?).to eq false
@@ -65,7 +65,7 @@ describe 'user stories' do
 
   it "so that there's enough to travel, you can only touch-in with min fare value" do
     card = Oystercard.new
-    expect{card.touch_in}.to raise_error "Cannot touch-in: under minimum balance of #{Oystercard::MIN_FARE}; please top-up"
+    expect{card.touch_in('station')}.to raise_error "Cannot touch-in: under minimum balance of #{Oystercard::MIN_FARE}; please top-up"
   end
 
 
@@ -75,9 +75,21 @@ describe 'user stories' do
   it 'so that a customer is charged, balance is deducted on touch out' do
     card = Oystercard.new
     card.top_up(Oystercard::MIN_FARE)
-    card.touch_in
+    card.touch_in('station')
     card.touch_out
     expect(card.balance).to eq 0
   end
+
+  # In order to pay for my journey
+  # As a customer
+  # I need to know where I've travelled from
+  it 'to know where travelled from, entry station should be recorded on touch_in' do
+    card = Oystercard.new
+    card.top_up(Oystercard::MIN_FARE)
+    card.touch_in(:station)
+    expect(card.entry_station).to eq :station
+  end
+
+
 
 end

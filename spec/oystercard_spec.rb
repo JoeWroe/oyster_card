@@ -2,6 +2,7 @@ require 'oystercard.rb'
 
 describe Oystercard do
   subject(:card) { described_class.new }
+  let (:station) {double :station}
 
   describe ' #balance' do
 
@@ -39,21 +40,28 @@ describe Oystercard do
   describe ' #touch in' do
 
     it 'raises error when balance is under minimum fare cost' do
-      expect{card.touch_in}.to raise_error "Cannot touch-in: under minimum balance of #{Oystercard::MIN_FARE}; please top-up"
+      expect{card.touch_in(station)}.to raise_error "Cannot touch-in: under minimum balance of #{Oystercard::MIN_FARE}; please top-up"
     end
 
     it 'changes in_journey? to true' do
       card.top_up(Oystercard::MIN_FARE)
-      card.touch_in
+      card.touch_in(station)
       expect(card).to be_in_journey
     end
+
+    it 'records the entry station' do
+      card.top_up(Oystercard::MIN_FARE)
+      card.touch_in(:station)
+      expect(card.entry_station).to eq :station
+    end
+
   end
 
   describe ' #touch out' do
 
     before do
       card.top_up(Oystercard::MIN_FARE)
-      card.touch_in
+      card.touch_in(station)
     end
 
     it 'changes in_journey? to false' do
@@ -63,6 +71,11 @@ describe Oystercard do
 
     it 'deducts minimum fare from balance' do
       expect{card.touch_out}.to change{card.balance}.by(-Oystercard::MIN_FARE)
+    end
+
+    it "resets entry_station to nil" do
+      card.touch_out
+      expect(card.entry_station).to eq nil
     end
   end
 
