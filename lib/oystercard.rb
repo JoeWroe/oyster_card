@@ -8,8 +8,15 @@ MAX_BALANCE = 90
   end
 
   def top_up(value)
-    fail "Cannot top up: maximum balance of #{MAX_BALANCE} exceeded, reduce top up amount." if (@balance + value) > MAX_BALANCE
+    fail "Cannot top up: maximum balance of #{MAX_BALANCE} exceeded, reduce top up amount." if exceeds_max? (value)
   	@balance += value
   end
 
+	def exceeds_max? (value)
+		(@balance + value) > MAX_BALANCE
+	end
+
+  def deduct(value)
+  	@balance -= value
+  end
 end

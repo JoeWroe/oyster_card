@@ -22,8 +22,12 @@ describe Oystercard do
         expect { card.top_up(Oystercard::MAX_BALANCE + 1) }.to raise_error "Cannot top up: maximum balance of #{Oystercard::MAX_BALANCE} exceeded, reduce top up amount."
       end
     end
-
   end
 
+  describe ' #deduct' do
+    it 'decreases balance by value passed in' do
+      expect{card.deduct(1)}.to change{card.balance}.by(-1)
+    end
+  end
 
 end

@@ -8,7 +8,7 @@ describe 'user stories' do
   end
 
   it 'should automatically start with a balance of 0' do
-    card =Oystercard.new
+    card = Oystercard.new
     expect(card.balance).to eq 0
   end
 
@@ -34,4 +34,17 @@ describe 'user stories' do
     card = Oystercard.new
     expect { card.top_up(Oystercard::MAX_BALANCE + 1) }.to raise_error "Cannot top up: maximum balance of #{Oystercard::MAX_BALANCE} exceeded, reduce top up amount."
   end
+
+
+  # In order to pay for my journey
+  # As a customer
+  # I need my fare deducted from my card
+  it 'deducts money from balance' do
+    card = Oystercard.new
+    old_balance = card.balance
+    new_balance = card.deduct(1)
+    expect(old_balance > new_balance)
+  end
 end
+
+
