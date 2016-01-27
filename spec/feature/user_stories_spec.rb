@@ -15,7 +15,7 @@ describe 'user stories' do
   #In order to keep using public transport
   #As a customer
   #I want to add money to my card
-  
+
   it 'so that my card can take money, card needs to accpet top-up value' do
     card = Oystercard.new
     expect{card.top_up(10)}.not_to raise_error
@@ -27,4 +27,11 @@ describe 'user stories' do
     expect(card.balance).to eq 10
   end
 
+  # In order to protect my money from theft or loss
+  # As a customer
+  # I want a maximum limit (of £90) on my card
+  it 'prevents top up when maximum balance reached' do
+    card = Oystercard.new
+    expect { card.top_up(Oystercard::MAX_BALANCE + 1) }.to raise_error "Cannot top up: maximum balance of #{Oystercard::MAX_BALANCE} exceeded, reduce top up amount."
+  end
 end
