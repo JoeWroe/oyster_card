@@ -101,5 +101,13 @@ describe 'user stories' do
     expect(card.history).to include(:entry_station => :exit_station)
   end
 
+  # In order to know how far I have travelled
+  # As a customer
+  # I want to know what zone a station is in
+  it 'so a user knows where a station is, a station can return its zone' do
+    station = Station.new(name: 'Name', zone: 1)
+    expect(station.zone).to eq 1
+  end
+
 
 end
