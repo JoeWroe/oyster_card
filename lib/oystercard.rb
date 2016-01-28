@@ -1,16 +1,16 @@
+require_relative 'journey'
+
 class Oystercard
 
-attr_reader :balance, :entry_station, :exit_station, :history
+attr_reader :balance, :exit_station, :touched_in, :journey
 MAX_BALANCE = 90
 MIN_FARE = 1
 
 
 
-  def initialize
+  def initialize(journey = Journey.new)
     @balance = 0
-    @history = {}
-
-
+    @journey = journey
   end
 
 
@@ -20,27 +20,30 @@ MIN_FARE = 1
   	@balance += value
   end
 
+
   def deduct(value)
   	@balance -= value
   end
 
-  def in_journey?
-    !!entry_station
-  end
 
   def touch_in(entry_station)
   	fail "Cannot touch-in: under minimum balance of #{MIN_FARE}; please top-up" if @balance < MIN_FARE
-    @entry_station = entry_station
+    journey.start(entry_station)
   end
+
 
   def touch_out(exit_station)
     deduct MIN_FARE
-    @history[@entry_station] = exit_station
-    @entry_station = nil
-    @exit_station = exit_station
+    # @history[@entry_station] = exit_station
+    # @entry_station = nil
+    # @exit_station = exit_station
+    journey.end(exit_station)
   end
 
+
+
   private
+
 
   def exceeds_max?(value)
 		(@balance + value) > MAX_BALANCE

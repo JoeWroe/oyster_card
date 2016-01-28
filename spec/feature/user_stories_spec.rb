@@ -54,7 +54,7 @@ describe 'user stories' do
     card = Oystercard.new
     card.top_up(Oystercard::MIN_FARE)
     card.touch_in(:entry_station)
-    expect(card.in_journey?).to eq true
+    expect(card.journey.in_journey?).to eq true
     card.touch_out(:exit_station)
     expect(card.in_journey?).to eq false
   end
@@ -109,5 +109,22 @@ describe 'user stories' do
     expect(station.zone).to eq 1
   end
 
+  # In order to be charged correctly
+  # As a customer
+  # I need a penalty charge deducted if I fail to touch in or out
+  it 'if journey has no entry station, it deducts a penalty fare' do
+    card = Oystercard.new
+    card.top_up(20)
+    card.touch_in(:entry_station)
+    card.touch_in(:entry_station)
+    expect(card.history).to include(:entry_station => nil)
+    expect(card.journey.fare).to eq(6)
+  end
 
+  it 'if journey has no exit station, it deducts a penalty fare' do
+    card = Oystercard.new
+    card.touch_out(:exit_station)
+    expect(card.history).to include(nil => :exit_station)
+    expect(card.journey.fare).to eq(6)
+  end
 end
