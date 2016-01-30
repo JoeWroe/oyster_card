@@ -1,9 +1,11 @@
 require 'oystercard.rb'
 
 describe Oystercard do
-  let (:card)          { described_class.new(Journey.new) }
+  let (:card)          { described_class.new(journey_klass) }
   let (:entry_station) { double :entry_station }
   let (:exit_station)  { double :exit_station }
+  let (:journey)       { double :journey}
+  let(:journey_klass)  { double('journey_klass')}
 
   describe ' #maintainence' do
 
@@ -29,12 +31,20 @@ describe Oystercard do
       end
     end
 
+
     context ' when checking history' do
+
+      before do
+        allow(journey_klass).to receive(:new){journey}
+        allow(journey).to receive(:start){:entry_station}
+        allow(journey).to receive(:end){:exit_station}
+      end
+
       it 'returns the entry and exit station together' do
         card.top_up(20)
         card.touch_in(:entry_station)
         card.touch_out(:exit_station)
-        expect(card.history).to include(:entry_station => :exit_station)
+        expect(card.history).to include(journey)
       end
     end
   end
@@ -65,7 +75,7 @@ describe Oystercard do
     end
 
     context ' when ending a journey' do
-      before(:each) do
+      before do
         card.top_up(Oystercard::MIN_FARE)
         card.touch_in(entry_station)
       end
